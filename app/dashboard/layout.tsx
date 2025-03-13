@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import AppBar from "@mui/material/AppBar";
@@ -29,6 +29,10 @@ import {
   Notifications as NotificationsIcon,
 } from "@mui/icons-material";
 import Link from "next/link";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { useRouter } from "next/navigation";
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 const drawerWidth = 240;
 
@@ -84,6 +88,11 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+  const supabase = createClientComponentClient();
+  const [userInitials, setUserInitials] = useState("--");
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -95,6 +104,37 @@ export default function DashboardLayout({
     } else {
       setOpen(!open);
     }
+  };
+
+  useEffect(() => {
+    const getUserData = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user?.email) {
+        const email = session.user.email;
+        const initials = email
+          .split('@')[0]
+          .split('.')
+          .map(name => name[0].toUpperCase())
+          .join('');
+        setUserInitials(initials);
+      }
+    };
+
+    getUserData();
+  }, []);
+
+  const handleProfileClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push('/auth');
+    router.refresh();
   };
 
   const drawer = (
@@ -170,7 +210,27 @@ export default function DashboardLayout({
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-            <Avatar>JD</Avatar>
+            <Avatar 
+              onClick={handleProfileClick}
+              sx={{ cursor: 'pointer' }}
+            >
+              {userInitials}
+            </Avatar>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+            >
+              <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+            </Menu>
           </Box>
         </Toolbar>
       </AppBar>

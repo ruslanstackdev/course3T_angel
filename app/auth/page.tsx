@@ -23,6 +23,7 @@ import { supabase } from "@/lib/supabase";
 const StyledCard = styled(Card)(({ theme }) => ({
   width: "100%",
   maxWidth: "400px",
+  margin: "0 auto", // Add this to center the card horizontally
 }));
 
 export default function AuthPage() {
@@ -101,8 +102,23 @@ export default function AuthPage() {
         p: 4,
       }}
     >
-      <Container maxWidth="sm">
-        <Box sx={{ textAlign: "center", mb: 4 }}>
+      <Container 
+        maxWidth="sm" 
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Box 
+          sx={{ 
+            textAlign: "center", 
+            mb: 4,
+            width: '100%', // Add this to ensure full width
+            maxWidth: '400px' // Match StyledCard maxWidth
+          }}
+        >
           <Typography variant="h3" component="h1" sx={{ color: "white", fontWeight: "bold" }}>
             Real Estate App
           </Typography>

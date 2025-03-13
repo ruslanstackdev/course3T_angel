@@ -6,11 +6,6 @@ export const supabase = createClientComponentClient({
   options: {
     db: {
       schema: 'public'
-    },
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true
     }
   }
 });

@@ -75,6 +75,8 @@ export default function AuthPage() {
         const siteUrl = process.env.NEXT_PUBLIC_SITE_URL 
           || process.env.NEXT_PUBLIC_VERCEL_URL 
           || window.location.origin;
+
+          console.log(siteUrl)
         
         const { error } = await supabase.auth.signUp({
           email,

@@ -139,7 +139,6 @@ export default function DashboardLayout({
 
   const drawer = (
     <Box>
-      <Toolbar />
       <List>
         {menuItems.map((item) => (
           <ListItem key={item.text} disablePadding>
@@ -173,12 +172,12 @@ export default function DashboardLayout({
   );
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: 'flex' }}>
       <AppBar
         position="fixed"
         sx={{
-          width: { md: `calc(100% - ${open ? drawerWidth : 64}px)` },
-          ml: { md: `${open ? drawerWidth : 64}px` },
+          width: '100%', // Set to full width
+          zIndex: (theme) => theme.zIndex.drawer + 1,
         }}
       >
         <Toolbar>
@@ -237,7 +236,10 @@ export default function DashboardLayout({
 
       <Box
         component="nav"
-        sx={{ width: { md: open ? drawerWidth : 64 }, flexShrink: { md: 0 } }}
+        sx={{ 
+          width: { md: open ? drawerWidth : 64 }, 
+          flexShrink: { md: 0 } 
+        }}
       >
         {/* Mobile drawer */}
         <Drawer
@@ -245,13 +247,14 @@ export default function DashboardLayout({
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: "block", md: "none" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
+              marginTop: '64px', // Add this to start below AppBar
             },
           }}
         >
@@ -265,6 +268,7 @@ export default function DashboardLayout({
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: open ? drawerWidth : 64,
+              marginTop: '64px', // Add this to start below AppBar
               transition: theme.transitions.create("width", {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.enteringScreen,
@@ -283,10 +287,9 @@ export default function DashboardLayout({
           flexGrow: 1,
           p: 3,
           width: { md: `calc(100% - ${open ? drawerWidth : 64}px)` },
-          ml: { md: `${open ? drawerWidth : 64}px` },
+          marginTop: '64px', // Add this to start below AppBar
         }}
       >
-        <Toolbar />
         {children}
       </Box>
     </Box>

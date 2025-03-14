@@ -71,12 +71,16 @@ export default function AuthPage() {
         }
 
       } else {
-        // Sign Up
+        // Sign Up - Modified to use site URL from environment
+        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL 
+          || process.env.NEXT_PUBLIC_VERCEL_URL 
+          || window.location.origin;
+        
         const { error } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/auth/callback`,
+            emailRedirectTo: `${siteUrl}/auth/callback`,
           },
         });
         if (error) throw error;
